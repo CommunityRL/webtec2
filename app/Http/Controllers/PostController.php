@@ -11,13 +11,14 @@ class PostController extends Controller
 
     public function getAllPosts(){
         return view('test', [
-            'posts' => Post::latest()->paginate(5)
+            'posts' => Post::latest()->paginate(4)
         ]);
     }
+
     public function getPosts(){
         $posts = [];
         if (auth()->check()) {
-            $posts = auth()->user()->usersCoolPosts()->latest()->get();
+            $posts = auth()->user()->usersPosts()->latest()->get();
         }
         return view('home', ['posts' => $posts]);
     }
@@ -25,7 +26,9 @@ class PostController extends Controller
     public function deletePost(Post $post){
         if (auth()->user()->id == $post['user_id']) {
             $post->delete();
-        }
+        } /* else{
+            return redirect('/', 403);
+        } doesn't work: getting error InvalidArgument: 403 (no access) is not a redirect status code*/
         return redirect('/');
 
     }
@@ -58,6 +61,6 @@ class PostController extends Controller
         $incomingFields['body'] = strip_tags($incomingFields['body']);
         $incomingFields['user_id'] = auth()->id();
         Post::create($incomingFields);
-        return redirect()->route("dashboard2")->with("success", "Post created successfully!");
+        return redirect()->route("dashboard")->with("success", "Post created successfully!");
     }
 }

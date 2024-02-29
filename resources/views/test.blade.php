@@ -40,12 +40,15 @@
             @include('shared.success-message')
             <h4>Create Post</h4>
             <div class="row">
-                <form action="{{route("post.create")}}" method="POST">
+                <form action="{{route("posts.store")}}" method="POST">
                     @csrf
                     <div class="mb-3">
                         <input type="text" name="title">
                         <textarea name="body" class="form-control" id="idea" rows="3"></textarea>
                         @error('title')
+                            <span class="fs-6 text-danger">{{$message}}</span>
+                        @enderror
+                        @error('body')
                             <span class="fs-6 text-danger">{{$message}}</span>
                         @enderror
                     </div>
@@ -60,6 +63,7 @@
                     @include('shared.post-displayer')
                 </div>
             @endforeach
+            {{$posts->links()}}
         </div>
         <div class="col-3">
             <div class="card">

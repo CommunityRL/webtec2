@@ -10,7 +10,7 @@
 
         <div style="border: 2px solid black;">
             <h2>Create POST</h2>
-            <form action="{{route("post.create")}}" method="post">
+            <form action="{{route("posts.store")}}" method="post">
                 @csrf
                 <input type="text" name="title" placeholder="post title">
                 <textarea name="body" placeholder="body content..."></textarea>
@@ -26,8 +26,8 @@
                 <div style="background-color: gray; padding: 10px; margin: 10px;">
                     <h3>{{ $post['title'] }} {{--by: {{ $post->user->name }}--}}</h3>
                     {{ $post['body'] }}
-                    <p><a style="text-decoration: none; color:chartreuse;" href="/edit-post/{{ $post->id }}">Edit</a></p>
-                    <form action="/delete-post/{{ $post->id }}" method="POST">
+                    <p><a style="text-decoration: none; color:chartreuse;" href="{{route("posts.show", ["post" => $post->id])}}">Edit</a></p>
+                    <form action="/posts/{{ $post->id }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button>Delete</button>

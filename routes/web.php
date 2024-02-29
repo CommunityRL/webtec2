@@ -17,11 +17,11 @@ use App\Http\Controllers\UserController;
 |
 */
 
-//home page
-Route::get('/', [PostController::class, 'getPosts'])->name("dashboard");
+//home page no css not using
+Route::get('/test', [PostController::class, 'getPosts'])->name("dashboard");
 
 //home page 2.0 all posts displ,ayed, Twitter like template used
-Route::get('test', [PostController::class, 'getAllPosts'])->name("dashboard2");
+Route::get('/', [PostController::class, 'getAllPosts'])->name("dashboard");
 
 // redirect to authentication pages : login.b.p register.b.p
 Route::get('/login', [UserController::class, 'login'])->name("user.login");
@@ -33,7 +33,7 @@ Route::get('/logout', [UserController::class, 'logout'])->name("user.logout");
 Route::post('/loginAction', [UserController::class, 'loginAction'])->name("user.loginAction");
 
 // Blog post related routes
-Route::post('/create-post', [PostController::class, 'createPost'])->name("post.create");
-Route::get('/edit-post/{post}', [PostController::class, 'showEditScreen'])->name("post.showEdit");
-Route::put('/edit-post/{post}', [PostController::class, 'actuallyUpdatePost'])->name("post.update");
-Route::delete('/delete-post/{post}', [PostController::class, 'deletePost'])->name("post.delete");
+Route::post('/posts', [PostController::class, 'createPost'])->name("posts.store");
+Route::get('/posts/{post}', [PostController::class, 'showEditScreen'])->name("posts.show");
+Route::put('/posts/{post}', [PostController::class, 'actuallyUpdatePost'])->name("posts.update");
+Route::delete('/posts/{post}', [PostController::class, 'deletePost'])->name("posts.destroy");

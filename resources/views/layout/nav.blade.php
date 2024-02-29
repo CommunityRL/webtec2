@@ -24,6 +24,9 @@
                         <a class="nav-link" href="/register">Register</a>
                     </li>
                 @endauth
+                <li class="nav-item">
+                    <a href="/" class="nav-link">Dashboard</a>
+                </li>
             </ul>
         </div>
     </div>

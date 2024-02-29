@@ -1,4 +1,4 @@
-{{--foreach comment--}}
+{{--foreach comment made to this post--}}
 <div class="d-flex align-items-start">
     {{--commenters profile picture--}}
     <div class="w-100">
