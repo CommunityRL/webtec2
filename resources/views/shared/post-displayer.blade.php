@@ -6,13 +6,15 @@
                     src="https://api.dicebear.com/6.x/fun-emoji/svg?seed=Mario" alt="Mario Avatar">
 
                 <div>
-                    <h5 class="card-title mb-0"><a href="#"> {{ $post->user->name }}
+                    <h5 class="card-title mb-0"><a href="{{ route('users.profile', ['user' => $post->user->id]) }}">
+                            {{ $post->user->name }}
                         </a></h5>
                 </div>
             </div>
-            @if (auth()->check())
-                @if (auth()->user()->id == $post->user_id)
-                    <div class="d-flex flex-row">
+            <div class="d-flex flex-row">
+                <a class="btn btn-primary btn-sm" href="{{ route('posts.show', ['post' => $post->id]) }}">View</a>
+                @if (auth()->check())
+                    @if (auth()->user()->id == $post->user_id)
                         <form action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST">
                             @csrf
                             @method('DELETE')
@@ -26,10 +28,9 @@
                                     </path>
                                 </svg></button>
                         </form>
-                        <a class="btn btn-primary btn-sm" href="{{ route('posts.show', ['post' => $post->id]) }}">Edit</a>
-                    </div>
+                    @endif
                 @endif
-            @endif
+            </div>
         </div>
     </div>
     <div class="card-body">
@@ -48,14 +49,19 @@
             </div>
         </div>
         <div>
-            <form action="/create-comment/{{ $post->id }}" method="POST">
-                @csrf
-                <div class="mb-3">
-                    <textarea name="comment" class="fs-6 form-control" rows="1"></textarea>
-                    <button class="btn btn-primary btn-sm"> Post Comment </button>
-            </form>
+            @auth
+                <form action="{{ route('posts.comments.store', ['post' => $post->id]) }}" method="POST">
+                    <div class="mb-3">
+                        @csrf
+                        <textarea name="body" class="fs-6 form-control" rows="1"></textarea>
+                        <button type="submit" class="btn btn-primary btn-sm"> Post Comment </button>
+                    </div>
+                </form>
+            @endauth
+            <hr>
+            @foreach ($post->comments as $comment)
+                @include('shared.comment-displayer')
+            @endforeach
         </div>
-        <hr>
     </div>
-</div>
 </div>

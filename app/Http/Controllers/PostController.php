@@ -9,50 +9,50 @@ use App\Http\Controllers\Controller;
 class PostController extends Controller
 {
 
-    public function getAllPosts(){
-        return view('test', [
-            'posts' => Post::latest()->paginate(4)
+    public function getOnlyAllPosts(){
+        return view("posts.allposts",[
+            "posts" => Post::latest()->paginate(10)
         ]);
     }
 
-    public function getPosts(){
+    public function getUserPosts(){
         $posts = [];
         if (auth()->check()) {
             $posts = auth()->user()->usersPosts()->latest()->get();
         }
-        return view('home', ['posts' => $posts]);
+        return view('test', ['posts' => $posts]);
     }
 
-    public function deletePost(Post $post){
-        if (auth()->user()->id == $post['user_id']) {
+    public function destroy(Post $post){
+        if (auth()->id() == $post['user_id']) {
             $post->delete();
         } /* else{
             return redirect('/', 403);
         } doesn't work: getting error InvalidArgument: 403 (no access) is not a redirect status code*/
-        return redirect('/');
+        return redirect()->route("dashboard")->with("success", "Post deleted");
 
     }
-    public function actuallyUpdatePost(Post $post, Request $request){
+    public function update(Post $post, Request $request){
         if (auth()->user()->id == $post['user_id']) {
             $incomingFields = $request->validate([
-                'title' => 'required',
-                'body' => 'required'
+                'title' => 'required|min:5|max:50',
+                'body' => 'required|min:10|max:255'
             ]);        
             $incomingFields['title'] = strip_tags($incomingFields['title']);
             $incomingFields['body'] = strip_tags($incomingFields['body']);
             
             $post->update($incomingFields);
         }
-        return redirect('/');
+        return view("posts.standalonepost", ["post" => $post]);
     }
-    public function showEditScreen(Post $post){
+    public function showEdit(Post $post){
         if (auth()->user()->id !== $post['user_id']) {
-            return redirect('/');
+            return redirect()->route("dashboard");
         }
-        return view('edit-post', ['post' => $post]);
+        return view('posts.edit-post', ['post' => $post]);
     }
 
-    public function createPost(Request $request){
+    public function store(Request $request){
         $incomingFields = $request->validate([
             'title' => 'required|min:5|max:240',
             'body' => 'required|min:10|max:700'
@@ -61,6 +61,10 @@ class PostController extends Controller
         $incomingFields['body'] = strip_tags($incomingFields['body']);
         $incomingFields['user_id'] = auth()->id();
         Post::create($incomingFields);
-        return redirect()->route("dashboard")->with("success", "Post created successfully!");
+        return redirect()->route("dashboard")->with("success", "Post created!");
+    }
+
+    public function show(Post $post){
+        return view("posts.standalonepost", ["post" => $post]);
     }
 }

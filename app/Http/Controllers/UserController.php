@@ -10,40 +10,44 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserController extends Controller
 {
-    public function loginAction(Request $request){
+
+    public function profile(User $user){
+        return view("users.profile", ["user" => $user]);
+    }
+    public function authenticate(Request $request){
         $incomingFields = $request->validate([
-            'loginName' => 'required',
+            'loginEmail' => 'required',
             'loginPassword' => 'required'
         ]);
 
-        if (auth()->attempt(['name' => $incomingFields['loginName'], 'password' => $incomingFields['loginPassword']])) {
+        if (auth()->attempt(['email' => $incomingFields['loginEmail'], 'password' => $incomingFields['loginPassword']])) {
             $request->session()->regenerate();
         }
 
-        return redirect('/');
+        return redirect()->route("dashboard");
     }
-    public function registerAction(Request $request){
+    public function store(Request $request){
         $incomingFields = $request->validate([
-            'name' => ['required', 'min:3', 'max:10', Rule::unique('users', 'name')],
+            'name' => ['required', 'min:3', 'max:30', Rule::unique('users', 'name')],
             'email' => ['required', 'email', Rule::unique('users', 'email')],
-            'password' => ['required', 'min:8', 'max:200'],
+            'password' => ['required', 'confirmed', 'min:8', 'max:200'],
         ]);
 
         $incomingFields['password'] = bcrypt($incomingFields['password']);
         $user = User::create($incomingFields);
         auth()->login($user);
-        return redirect('/');
+        return redirect()->route("dashboard");
     }
 
     public function logout(){
         auth()->logout();
-        return redirect('/');
+        return redirect()->route("dashboard");
     }
 
     public function login(){
-        return view('login');
+        return view('users.auth.login');
     }
     public function register(){
-        return view('register');
+        return view('users.auth.register');
     }
 }

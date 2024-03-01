@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-dark border-bottom border-bottom-dark ticky-top bg-body-tertiary"
     data-bs-theme="dark">
     <div class="container">
-        <a class="navbar-brand fw-light" href="/"><span class="fas fa-brain me-1">
+        <a class="navbar-brand fw-light" href="{{route("dashboard")}}"><span class="fas fa-brain me-1">
             </span>{{ config('app.name') }}</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,17 +11,17 @@
             <ul class="navbar-nav">
                 @auth
                     <li class="nav-item">
-                        <a class="nav-link" href="/profile">Profile</a>
+                        <a class="nav-link" href="{{route("users.profile", ["user" => auth()->user()->id])}}">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/logout">Logout</a>
+                        <a class="nav-link" href="{{route("users.logout")}}">Logout</a>
                     </li>
                 @else
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/login">Login</a>
+                        <a class="nav-link active" aria-current="page" href="{{route("users.login")}}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/register">Register</a>
+                        <a class="nav-link" href="{{route("users.register")}}">Register</a>
                     </li>
                 @endauth
                 <li class="nav-item">
